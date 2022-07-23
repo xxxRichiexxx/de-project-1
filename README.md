@@ -56,13 +56,14 @@
 
     SELECT * from production.orderstatuses limit 50
 
-id	key	
-integer	character varying
-1	1	Open
-2	2	Cookin
-3	3	Delivering
-4	4	Closed
-5	5	Cancelled
+|   | id      | key               |
+|---|---------|-------------------|
+|   | integer | character varying |
+| 1 | 1       | Open              |
+| 2 | 2       | Cooking           |
+| 3 | 3       | Delivering        |
+| 4 | 4       | Closed            |
+| 5 | 5       | Cancelled         |
 
     SELECT * from production.orderstatuslog limit 50
 
@@ -155,13 +156,14 @@ integer	character varying
     GROUP BY Recency
     ORDER BY recency
 
-    recency	count	max	
-    integer	bigint	integer
-    1	1	200	999
-    2	2	200	990
-    3	3	200	992
-    4	4	200	996
-    5	5	200	997
+|   | recency | count  | max     |
+|---|---------|--------|---------|
+|   | integer | bigint | integer |
+| 1 | 1       | 200    | 999     |
+| 2 | 2       | 200    | 990     |
+| 3 | 3       | 200    | 992     |
+| 4 | 4       | 200    | 996     |
+| 5 | 5       | 200    | 997     |
 
 Расчет второй метрики:
 
@@ -175,17 +177,14 @@ integer	character varying
     ORDER BY frequency
 
     	
-    frequency
-    integer
-    count
-    bigint
-    max
-    integer
-    1	1	200	989
-    2	2	200	999
-    3	3	200	995
-    4	4	200	992
-    5	5	200	997
+|   | frequency | count  | max     |
+|---|-----------|--------|---------|
+|   | integer   | bigint | integer |
+| 1 | 1         | 200    | 989     |
+| 2 | 2         | 200    | 999     |
+| 3 | 3         | 200    | 995     |
+| 4 | 4         | 200    | 992     |
+| 5 | 5         | 200    | 997     |
 
 Расчет третьей метрики:
 
@@ -198,13 +197,14 @@ integer	character varying
     GROUP BY monetary_value
     ORDER BY monetary_value
 
-    monetary_value	count	max	
-    integer	bigint	integer
-    1	1	200	989
-    2	2	200	998
-    3	3	200	999
-    4	4	200	982
-    5	5	200	997
+|   | monetary_value | count  | max     |
+|---|----------------|--------|---------|
+|   | integer        | bigint | integer |
+| 1 | 1              | 200    | 989     |
+| 2 | 2              | 200    | 998     |
+| 3 | 3              | 200    | 999     |
+| 4 | 4              | 200    | 982     |
+| 5 | 5              | 200    | 997     |
 
 На основе данных, подготовленных в таблицах analysis.tmp_rfm_recency, analysis.tmp_rfm_frequency и analysis.tmp_rfm_monetary_value, заполняем витрину analysis.dm_rfm_segments.
 
@@ -217,24 +217,19 @@ integer	character varying
     LIMIT 10
 
     	
-    user_id
-    integer
-    recency
-    integer
-    frequency
-    integer
-    monetary_value
-    integer
-    1	0	1	3	4
-    2	1	4	3	3
-    3	2	2	3	5
-    4	3	2	3	3
-    5	4	4	3	3
-    6	5	5	5	5
-    7	6	1	3	5
-    8	7	4	2	2
-    9	8	1	1	3
-    10	9	1	3	2    
+|    | user_id | recency | frequency | monetary_value |
+|----|---------|---------|-----------|----------------|
+|    | integer | integer | integer   | integer        |
+| 1  | 0       | 1       | 3         | 4              |
+| 2  | 1       | 4       | 3         | 3              |
+| 3  | 2       | 2       | 3         | 5              |
+| 4  | 3       | 2       | 3         | 3              |
+| 5  | 4       | 4       | 3         | 3              |
+| 6  | 5       | 5       | 5         | 5              |
+| 7  | 6       | 1       | 3         | 5              |
+| 8  | 7       | 4       | 2         | 2              |
+| 9  | 8       | 1       | 1         | 3              |
+| 10 | 9       | 1       | 3         | 2              |  
 
 
 ### 7) Доработка представлений
