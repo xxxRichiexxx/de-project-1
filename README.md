@@ -44,13 +44,14 @@
 
     SELECT * from production.orders limit 50
 
-	order_id	order_ts	user_id	bonus_payment	payment	cost	bonus_grant	status
-	integer	timestamp without time zone	integer	numeric	numeric	numeric	numeric	integer
-1	3562553	Fri Mar 04 2022 20:53:19 GMT+0000 (Всемирное координированное время)	875	0.00000	4440.00000	4440.00000	44.40000	5
-2	9519451	Wed Mar 02 2022 00:24:50 GMT+0000 (Всемирное координированное время)	576	0.00000	3000.00000	3000.00000	30.00000	5
-3	2343007	Mon Mar 07 2022 07:31:25 GMT+0000 (Всемирное координированное время)	181	0.00000	1620.00000	1620.00000	16.20000	5
-4	5205491	Sat Mar 12 2022 10:10:52 GMT+0000 (Всемирное координированное время)	957	0.00000	4200.00000	4200.00000	42.00000	4
-5	2071767	Sun Feb 20 2022 06:42:26 GMT+0000 (Всемирное координированное время)	539	0.00000	4620.00000	4620.00000	46.20000	4
+|   | order_id | order_ts                                                             | user_id | bonus_payment | payment    | cost       | bonus_grant | status  |
+|---|----------|----------------------------------------------------------------------|---------|---------------|------------|------------|-------------|---------|
+|   | integer  | timestamp without time zone                                          | integer | numeric       | numeric    | numeric    | numeric     | integer |
+| 1 | 3562553  | Fri Mar 04 2022 20:53:19 GMT+0000 (Всемирное координированное время) | 875     | 0.00000       | 4440.00000 | 4440.00000 | 44.40000    | 5       |
+| 2 | 9519451  | Wed Mar 02 2022 00:24:50 GMT+0000 (Всемирное координированное время) | 576     | 0.00000       | 3000.00000 | 3000.00000 | 30.00000    | 5       |
+| 3 | 2343007  | Mon Mar 07 2022 07:31:25 GMT+0000 (Всемирное координированное время) | 181     | 0.00000       | 1620.00000 | 1620.00000 | 16.20000    | 5       |
+| 4 | 5205491  | Sat Mar 12 2022 10:10:52 GMT+0000 (Всемирное координированное время) | 957     | 0.00000       | 4200.00000 | 4200.00000 | 42.00000    | 4       |
+| 5 | 2071767  | Sun Feb 20 2022 06:42:26 GMT+0000 (Всемирное координированное время) | 539     | 0.00000       | 4620.00000 | 4620.00000 | 46.20000    | 4       |
 
 
     SELECT * from production.orderstatuses limit 50
@@ -65,57 +66,69 @@ integer	character varying
 
     SELECT * from production.orderstatuslog limit 50
 
-	id	order_id	status_id	dttm
-	integer	integer	integer	timestamp without time zone
-1	1	3562553	5	Fri Mar 04 2022 20:53:19 GMT+0000 (Всемирное координированное время)
-2	2	3562553	1	Fri Mar 04 2022 20:36:10 GMT+0000 (Всемирное координированное время)
-3	3	9519451	5	Wed Mar 02 2022 00:24:50 GMT+0000 (Всемирное координированное время)
-4	4	9519451	1	Tue Mar 01 2022 23:28:33 GMT+0000 (Всемирное координированное время)
+|   | id      | order_id | status_id | dttm                                                                 |
+|---|---------|----------|-----------|----------------------------------------------------------------------|
+|   | integer | integer  | integer   | timestamp without time zone                                          |
+| 1 | 1       | 3562553  | 5         | Fri Mar 04 2022 20:53:19 GMT+0000 (Всемирное координированное время) |
+| 2 | 2       | 3562553  | 1         | Fri Mar 04 2022 20:36:10 GMT+0000 (Всемирное координированное время) |
+| 3 | 3       | 9519451  | 5         | Wed Mar 02 2022 00:24:50 GMT+0000 (Всемирное координированное время) |
+| 4 | 4       | 9519451  | 1         | Tue Mar 01 2022 23:28:33 GMT+0000 (Всемирное координированное время) |
 
 ### 3) Проверка качества данных
 
     SELECT constraint_name 
     FROM information_schema.REFERENTIAL_CONSTRAINTS
 		
-        constraint_name
-		name
-	1	orderitems_product_id_fkey
-	2	orderitems_order_id_fkey
-	3	orderstatuslog_order_id_fkey
-	4	orderstatuslog_status_id_fkey
+|  |   | constraint_name               |
+|--|---|-------------------------------|
+|  |   | name                          |
+|  | 1 | orderitems_product_id_fkey    |
+|  | 2 | orderitems_order_id_fkey      |
+|  | 3 | orderstatuslog_order_id_fkey  |
+|  | 4 | orderstatuslog_status_id_fkey |
 
-Т.к не на всех полях, участвующих в расчетах, наложены ограничения, то проведем дополнительную проверку качества данных:
+Т.к не на всех полях, участвующих в расчетах, наложены ограничения, то проведем дополнительную проверку качества данных.
 
-    SELECT COUNT(*) AS "Общее кол-во заказов",
-	       COUNT(order_id) AS "Количество заполненных строк",
-	       COUNT(DISTINCT order_id) AS "Количество уникальных идентификаторов",
-	       COUNT(CASE WHEN order_id IS NULL THEN 1 END) AS "Кол-во NULL"
+В таблице production.orders нас интересуют поля order_id, user_id, cost, status:
+
+    SELECT COUNT(*) AS "Общее кол-во строк",
+	       COUNT(order_id) AS "Количество заполненных строк order_id",
+	       COUNT(DISTINCT order_id) AS "Количество уникальных order_id",
+	       COUNT(user_id) AS "Количество заполненных строк user_id",
+           COUNT(cost) AS "Количество заполненных строк cost",
+           COUNT(status) AS "Количество заполненных строк status"
 	FROM production.orders
 	
-    Общее кол-во заказов	Количество заполненных строк	Количество уникальных идентифика	Кол-во NULL	
-	bigint	bigint	bigint	bigint
-	1	10000	10000	10000	0
+|  |   | Общее кол-во строк | Количество заполненных строк order_id | Количество уникальных order_id | Количество заполненных строк user_id | Количество заполненных строк cost | Количество заполненных строк status |
+|--|---|--------------------|---------------------------------------|--------------------------------|--------------------------------------|-----------------------------------|-------------------------------------|
+|  |   | bigint             | bigint                                | bigint                         | bigint                               | bigint                            | bigint                              |
+|  | 1 | 10000              | 10000                                 | 10000                          | 10000                                | 10000                             | 10000                               |
+
+
+В таблице production.orderstatuslog нас интересуют поля order_id, status_id, dttm:
 
     SELECT COUNT(*) AS "Общее кол-во записей",
-	       COUNT(order_id) AS "Количество заполненных order_id",
-	       COUNT(CASE WHEN order_id IS NULL THEN 1 END) AS "Кол-во NULL order_id",
-	       COUNT(dttm) AS "Количество заполненных dttm",
-	       COUNT(CASE WHEN dttm IS NULL THEN 1 END) AS "Кол-во NULL dttm"
-	FROM production.orderstatuslog
+           COUNT(order_id) AS "Количество заполненных order_id",
+           COUNT(status_id) AS "Количество заполненных status_id", 
+           COUNT(dttm) AS "Количество заполненных dttm"
+    FROM production.orderstatuslog
 	
-	
-	Общее кол-во записей	Количество заполненных order_id	Кол-во NULL order_id	Количество заполненных dttm	Кол-во NULL dttm	
-	bigint	bigint	bigint	bigint	bigint
-	1	29982	29982	0	29982	0
-    
+|  |   | Общее кол-во записей | Количество заполненных order_id | Количество заполненных status_id | Количество заполненных dttm |
+|--|---|----------------------|---------------------------------|----------------------------------|-----------------------------|
+|  |   | bigint               | bigint                          | bigint                           | bigint                      |
+|  | 1 | 29982                | 29982                           | 29982                            | 29982                       |
+
+В таблице production.users нас интересует поле id:
+
     SELECT COUNT(*) AS "Общее кол-во записей",
 	       COUNT(id) AS "Количество заполненных id",
 	       COUNT(DISTINCT id) AS "Кол-во уникальных id"
 	FROM production.users
 	
-    Общее кол-во записей	Количество заполненных id	Кол-во уникальных id	
-	bigint	bigint	bigint
-	1	1000	1000	1000
+|  |   | Общее кол-во записей | Количество заполненных id | Кол-во уникальных id |
+|--|---|----------------------|---------------------------|----------------------|
+|  |   | bigint               | bigint                    | bigint               |
+|  | 1 | 1000                 | 1000                      | 1000                 |
 
 Дублей нет, пропусков нет, все типы данных соответствующие.
 
