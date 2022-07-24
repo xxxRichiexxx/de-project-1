@@ -27,3 +27,5 @@ FROM production.orders AS o
 JOIN sq USING (order_id)
 JOIN production.orderstatuslog AS l
     ON sq.order_id = l.order_id AND sq.max_dttm = l.dttm;
+
+--Предпочтительным является второй вариант из-за меньшей стоимости
