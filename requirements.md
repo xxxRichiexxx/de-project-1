@@ -173,7 +173,7 @@
 
 
 ### 7) Доработка представлений
-В представлении analysis.orders пропало поле status, но появилась таблица analysis.orderstatuslog.
+В источнике production.orders пропало поле status, но появилась таблица production.orderstatuslog.
 Переписываем представление analysis.orders таким образом, чтобы там сохранилось поле status:
     
     orders_view.sql
